@@ -1,23 +1,23 @@
-# MySQL Database Backup Script
+#!/bin/bash
 
-## Overview
-This repository contains a simple Bash script to automate the backup of MySQL databases. The script creates a backup of the specified database, appends a timestamp to the backup file, and stores it in a specified directory. It also checks for the success of the backup operation and provides feedback to the user.
+# Define variables
+USER="root"
+PASSWORD="02136"
+DATABASE="employee"
+BACKUP_DIR="/home/arun/Documents/db_backup"
+DATE=$(date +"%Y%m%d%H%M%S")
+BACKUP_FILE="$BACKUP_DIR/${DATABASE}_backup_$DATE.sql"
 
-## Features
-- Automated MySQL database backups.
-- Customizable backup directory.
-- Timestamps included in the backup file name for easy identification.
-- Success and error notifications.
-- Easy setup and usage.
+# Create backup directory if it does not exist
+mkdir -p $BACKUP_DIR
 
-## Prerequisites
-- MySQL installed and configured.
-- Proper user access to MySQL (`root` or another user with sufficient permissions).
-- Bash shell (Linux/Unix-based system).
+# Run the mysqldump command to back up the database
+mysqldump -u $USER -p$PASSWORD $DATABASE > $BACKUP_FILE
 
-## Usage
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/mysql-database-backup-script.git
-   cd mysql-database-backup-script
+# Check if the backup was successful
+if [ $? -eq 0 ]; then
+  echo "Backup of database '$DATABASE' was successful!"
+  echo "Backup file: $BACKUP_FILE"
+else
+  echo "Backup of database '$DATABASE' failed!"
+fi
